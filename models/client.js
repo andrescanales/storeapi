@@ -1,6 +1,8 @@
+
 const mongoose = require('mongoose');
 const mongooseStringQuery = require('mongoose-string-query');
 const timestamps = require('mongoose-timestamp');
+const bcrypt = require('bcrypt');
 
 const ClientSchema = new mongoose.Schema(
 	{
@@ -25,3 +27,12 @@ const ClientSchema = new mongoose.Schema(
 		},
 	},
 );
+
+ClientSchema.methods.comparePassword = function(password){
+	return bcrypt.compareSync(password, this.password);
+}
+
+ClientSchema.plugin(timestamps);
+ClientSchema.plugin(mongooseStringQuery);
+const Client = mongoose.model('Client', ClientSchema);
+module.exports = Client;
