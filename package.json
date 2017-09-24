@@ -12,6 +12,7 @@
   "dependencies": {
     "bcrypt": "^1.0.3",
     "jsonwebtoken": "^8.0.1",
+    "mongodb-autoincrement": "^1.0.1",
     "mongoose": "^4.11.12",
     "mongoose-string-query": "^0.2.5",
     "mongoose-timestamp": "^0.6.0",
