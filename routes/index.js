@@ -18,6 +18,7 @@ module.exports = function(server){
 	server.del('/products/:product_id', product.deleteOne);
 	server.put('/products/:product_id', product.updateOne);
 	server.put('/products/likes/:product_id', product.likeOne);
+	server.post('/products/search', product.search);
 
 	server.get('/clients', client.getAll);
 	server.post('/clients', client.register);

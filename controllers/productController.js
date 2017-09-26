@@ -233,3 +233,29 @@ const ProductLog = require('../models/productLog');
 			res.send(401, {message: 'Unauthorize user!'});	
 		}
 	}
+
+	exports.search = function (req, res, next){
+		if (!req.is('application/json')) {
+			return next(
+				new errors.InvalidContentError("Expects 'application/json'"),
+			);
+		}
+		let data = req.body || {};
+		console.error(data.product);
+		Product.find({$text: { $search: data.product }}, function(err,data){
+			if (err) {
+				console.error(err);
+				return next(
+					new errors.InvalidContentError(err.errors.name.message),
+				);
+			}else if (!data) {
+				return next(
+					new errors.ResourceNotFoundError(
+						'The resource you requested could not be found.',
+					),
+				);
+			}
+			res.send(200, data);
+			next();
+		});
+	}
