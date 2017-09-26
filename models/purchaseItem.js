@@ -5,11 +5,11 @@ const timestamps = require('mongoose-timestamp');
 const PurchaseItemSchema = new mongoose.Schema(
 	{
 		purchase: { 
-			type: Schema.Types.ObjectId, 
+			type: mongoose.Schema.Types.ObjectId, 
 			ref: 'Purchase',
 		},
 		product: { 
-			type: Schema.Types:ObjectId, 
+			type: mongoose.Schema.Types.ObjectId, 
 			ref: 'Product',
 		},
 		quantity: {

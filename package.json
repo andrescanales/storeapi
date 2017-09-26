@@ -16,6 +16,7 @@
     "mongoose": "^4.11.12",
     "mongoose-string-query": "^0.2.5",
     "mongoose-timestamp": "^0.6.0",
+    "nodemon": "^1.12.1",
     "restify": "^6.0.1",
     "restify-errors": "^5.0.0",
     "restify-plugins": "^1.6.0"

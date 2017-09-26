@@ -4,8 +4,9 @@ const timestamps = require('mongoose-timestamp');
 
 const PurchaseSchema = new mongoose.Schema(
 	{
-		client: { type: Schema.Types.ObjectId, ref: 'Client' },
+		client: { type: mongoose.Schema.Types.ObjectId, ref: 'Client' },
 	},
+	{ minimize: false },
 );
 
 PurchaseSchema.plugin(timestamps);

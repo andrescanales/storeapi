@@ -18,6 +18,15 @@ const ProductSchema = new mongoose.Schema(
 			required: true,
 			default: 0,
 		},
+		stock: {
+			type: Number,
+			required: true,
+			default: 0,
+		},
+		likes: {
+			type: Number,
+			required: true,
+		},
 	},
 	{ minimize: false },
 );

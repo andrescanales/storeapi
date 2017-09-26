@@ -34,15 +34,13 @@ const Client = require('../models/client');
 		client.save(function(err){
 			if(err){
 				console.error(err);
-				return next(new errors.InternalError(
-					err.message
-					));
+				return next(new errors.InternalError(err.message));
 				next();
 			}else{
 				client.password = undefined;
 				return res.json(client);
 			}
-			res.send(201);
+			res.send(201, {result: 'created'});
 			next();
 		});
 	}
@@ -78,7 +76,8 @@ const Client = require('../models/client');
 			}
 			res.status(200);
 			res.json({token: jwt.sign({
-				  email: doc.email
+				_id: doc._id,
+				email: doc.email
 				}, 'secret', { expiresIn: '1h' })
 			});
 			next();

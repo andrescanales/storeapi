@@ -21,6 +21,10 @@ const AdminSchema = new mongoose.Schema(
 	},
 );
 
+AdminSchema.methods.comparePassword = function(password){
+	return bcrypt.compareSync(password, this.password);
+}
+
 AdminSchema.plugin(timestamps);
 AdminSchema.plugin(mongooseStringQuery);
 const Admin = mongoose.model('Admin', AdminSchema);
