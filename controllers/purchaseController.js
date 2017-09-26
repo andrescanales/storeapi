@@ -38,12 +38,8 @@ const PurchaseItem = require('../models/purchaseItem');
 			res.send(401, {message: 'Unauthorize user!'});	
 		}
 	}
-/*
-	exports.purchase = function(req, res, next) {
-		// Revisar como vamos a pasar los params del user a traves del token
-		//Recibo un post con 1 o varios json con products + quantities
-		//Creo 1 purchase
-		//Creo 1 o + purchases items
+
+	exports.createNew = function(req, res, next) {
 		if(!req.is('application/json')){
 			return next(
 				new errors.InvalidContentError("Expects 'application/json'"),
@@ -58,33 +54,61 @@ const PurchaseItem = require('../models/purchaseItem');
 					req.user = decode;
 					let data = req.body || {};
 					let purchase = new Purchase();
-					purchase.save()		
+					let purchaseItem = new PurchaseItem();
+
+					Product.findOne({_id: data.product}, function(err, prod){
+						if (err) {
+							console.error(err);
+							return next(
+								new errors.InvalidContentError(err.errors.name.message),
+							);
+						} else if (!prod) {
+							return next(
+								new errors.ResourceNotFoundError('The product you requested could not be found.'),
+							);
+						} else if (prod.stock < data.quantity){
+							return next(
+								new errors.ResourceNotFoundError('The product you requested is not available.'),
+							);
+						}
+
+						// In a more advanced scneario, we'll need to connecto to a payment gatway platform
+						purchase.client = req.user._id;
+						purchase.save(function(err, doc){
+							if (err){
+								console.error(err);
+								return next(new errors.InternalError(err.message));
+							}else if(doc){
+								purchaseItem.purchase = doc._id;
+								purchaseItem.product = data.product;
+								purchaseItem.quantity = data.quantity;
+								purchaseItem.save(function(err){
+									if (err){
+										console.error(err);
+										return next(new errors.InternalError(err.message));
+									}
+								});
+							}
+						});
+						newStock = (prod.stock - data.quantity);
+						console.error(prod._id);
+						console.error(newStock);
+						Product.update({_id: prod._id}, { $set: { stock: newStock }}, function(err){
+							if (err) {
+								console.error(err);
+								return next(
+									new errors.InvalidContentError(err.errors.name.message),
+								);
+							}
+
+							res.send(200, {message: "Purchase succesfully"});
+							next();
+						});
+
+					});
 				}
 			});
 		}else{
 			res.send(401, {message: 'Unauthorize user!'});	
 		}
 	}
-
-	exports.createNew = function (req, res, next) {
-		if(!req.is('application/json')){
-			return next(
-				new errors.InvalidContentError("Expects 'application/json'"),
-				);
-		}
-
-		let data = req.body || {};
-		let product = new Product(data);
-		product.save(function(err){
-			if (err){
-				console.error(err);
-				return next(new errors.InternalError(
-					err.message
-					));
-				next();
-			}
-			res.send(201, {result: 'created'});
-			next();
-		});
-	}
-*/

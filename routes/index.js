@@ -24,6 +24,7 @@ module.exports = function(server){
 	server.post('/clients/sign_in', client.signIn);
 
 	server.get('/purchases', purchase.getAll);
+	server.post('/purchases', purchase.createNew);
 
 	server.get('/admins', admin.getAll);
 	server.post('/admins', admin.createNew);
