@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const Purchase = require('../models/purchase');
 const Product = require('../models/product');
 const PurchaseItem = require('../models/purchaseItem');
+const PurchaseLog = require('../models/purchaseLog');
 
 	/* Get all purchases */
 	exports.getAll = function(req, res, next) {
@@ -55,6 +56,7 @@ const PurchaseItem = require('../models/purchaseItem');
 					let data = req.body || {};
 					let purchase = new Purchase();
 					let purchaseItem = new PurchaseItem();
+					let purchaseLog = new PurchaseLog();
 
 					Product.findOne({_id: data.product}, function(err, prod){
 						if (err) {
@@ -86,6 +88,17 @@ const PurchaseItem = require('../models/purchaseItem');
 									if (err){
 										console.error(err);
 										return next(new errors.InternalError(err.message));
+									}else{
+										purchaseLog.client = req.user._id;
+										purchaseLog.purchase = doc._id;
+										purchaseLog.product = data.product;
+										purchaseLog.quantity = data.quantity;
+										purchaseLog.save(function(err){
+											if (err){
+												console.error(err);
+												return next(new errors.InternalError(err.message));
+											}
+										});
 									}
 								});
 							}

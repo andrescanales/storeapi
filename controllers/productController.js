@@ -3,6 +3,7 @@ const errors = require('restify-errors');
 const jwt = require('jsonwebtoken');
 /* Model dependencies */
 const Product = require('../models/product');
+const ProductLog = require('../models/productLog');
 
 	/* Get all products */
 	exports.getAll = function(req, res, next) {
@@ -152,6 +153,16 @@ const Product = require('../models/product');
 									return next(
 										new errors.InvalidContentError(err.errors.name.message),
 									);
+								}
+								if (data.price) {
+									let productLog = new ProductLog();
+									productLog.product = data._id;
+									productLog.price = doc.price;
+									productLog.save(function(err){
+										if (err){
+											return next(new errors.InternalError(err.message));
+										}
+									});
 								}
 
 								res.send(200, data);
